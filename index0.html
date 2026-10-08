@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FLOR v1</title>
+<style>
+body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:#f1f4f1;color:#2a2f2a;margin:0;padding:16px;font-size:15px;line-height:1.45}
+.box{max-width:420px;margin:0 auto;background:#fff;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.12);padding:18px}
+h1{font-size:24px;margin:0 0 2px;color:#3d7350;letter-spacing:.08em}
+h2{font-size:16px;margin:18px 0 6px;color:#3d7350}
+p{margin:6px 0}
+button{background:#4a7c59;color:#fff;border:0;border-radius:8px;padding:10px 14px;font-size:15px;margin-top:8px;cursor:pointer}
+select,input[type=time]{font-size:15px;padding:6px 8px;border:1px solid #bbc4bb;border-radius:6px;background:#fff}
+input[type=range]{accent-color:#4a7c59;vertical-align:middle}
+.status{border-radius:8px;padding:10px 12px;margin:12px 0;background:#e6f0e8}
+small{color:#777}
+</style>
+</head>
+<body>
+<div class="box">
+<h1>FLOR</h1>
+<small>Version 1 (early prototype)</small>
+
+<div class="status" id="status">Status: Day mode. Scent 1 is on.</div>
+
+<h2>Shutdown</h2>
+<p>Shutdown time: <input type="time" id="time" value="17:30"></p>
+<button id="go">Start evening mode</button>
+<p id="msg"></p>
+
+<h2>Scent 1 (day)</h2>
+<p><select id="s1"><option>Citrus & rosemary</option><option>Lemon & mint</option><option>Grapefruit</option></select></p>
+<p>Strength: <input type="range" id="i1" min="1" max="10" value="6"> <span id="v1">6</span></p>
+<p>Cartridge: 72%</p>
+
+<h2>Scent 2 (evening)</h2>
+<p><select id="s2"><option>Lavender</option><option>Cedarwood</option><option>Sandalwood</option></select></p>
+<p>Strength: <input type="range" id="i2" min="1" max="10" value="5"> <span id="v2">5</span></p>
+<p>Cartridge: 88%</p>
+
+<h2>Calendar</h2>
+<p><input type="checkbox" id="cal"> Use my calendar (coming soon)</p>
+</div>
+
+<script>
+var eve=false;
+function $(id){return document.getElementById(id)}
+function show(){
+  $('status').textContent=eve?'Status: Evening mode. Scent 2 is on. Please close your laptop.':'Status: Day mode. Scent 1 is on.';
+  $('go').textContent=eve?'Back to day mode':'Start evening mode';
+}
+$('go').onclick=function(){
+  eve=!eve;show();
+  $('msg').textContent=eve?'Evening mode started at '+new Date().toLocaleTimeString():'';
+};
+$('i1').oninput=function(){$('v1').textContent=this.value};
+$('i2').oninput=function(){$('v2').textContent=this.value};
+$('cal').onclick=function(){alert('Calendar sync is not available yet.');this.checked=false};
+try{var t=localStorage.getItem('florv1time');if(t)$('time').value=t}catch(e){}
+$('time').onchange=function(){try{localStorage.setItem('florv1time',this.value)}catch(e){}};
+show();
+</script>
+</body>
+</html>
